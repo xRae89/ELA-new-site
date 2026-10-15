@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Employment Law Assist: new website
 
-## Getting Started
+Rebuild of employmentlawassist.com in Next.js 16 (App Router) + Tailwind CSS 4, with an AI chat assistant
+(Claude), a case-review intake form, all 50 pages of the old WordPress site, and redirects for old URLs that moved.
 
-First, run the development server:
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # fill in values (all optional for a first run)
+npm run dev                  # http://localhost:3000
+npm run build && npm start   # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires Node 20.9+ (built on Node 25). Check before changing anything: `npx tsc --noEmit && npx eslint .`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> Next.js 16 differs from older versions. Docs for the installed version live in `node_modules/next/dist/docs/`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploy to Vercel (recommended)
 
-## Learn More
+1. Go to vercel.com > **Add New > Project** > import this GitHub repo. Framework is auto-detected (Next.js).
+   No build settings need changing.
+2. Under **Environment Variables**, add the values below, for **Production** and **Preview**.
+3. Click **Deploy**. Every push to `main` then deploys automatically; other branches get preview URLs.
+4. **Domain:** Project > Settings > Domains > add `employmentlawassist.com` and `www`, then update DNS at the
+   registrar as Vercel instructs. Do this only when the firm approves the site, because it replaces the live WordPress site.
 
-To learn more about Next.js, take a look at the following resources:
+CLI alternative: `npm i -g vercel && vercel` (preview) / `vercel --prod` (production).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Environment variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Required | What it does |
+|---|---|---|
+| `INTAKE_WEBHOOK_URL` | **Yes, before launch** | URL that receives each case-review submission as JSON (`name, email, phone, story, source, receivedAt`). Use a Zapier/Make catch-hook, a CRM endpoint, or a Slack incoming webhook. **Without it, leads are not delivered anywhere.** |
+| `ANTHROPIC_API_KEY` | For live chat | Key from console.anthropic.com. Without it the chat answers from canned replies in `lib/chat.ts`. Chat usage bills to this key. |
+| `CHAT_MODEL` | No | Overrides the chat model (default `claude-opus-5-5`). A cheaper model such as `claude-sonnet-5-5` lowers cost. |
+| `NEXT_PUBLIC_SITE_URL` | Recommended | Production URL for canonical links and `sitemap.xml`. Defaults to `https://employmentlawassist.com`. |
 
-## Deploy on Vercel
+Preview deployments automatically send `Disallow: /` in `robots.txt`; production allows indexing.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Before going live: checklist
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Set `INTAKE_WEBHOOK_URL` and submit a test case review end to end.
+- [ ] Set `ANTHROPIC_API_KEY` (the firm's own key) and test the chat. Consider a spend limit in the Anthropic console.
+- [ ] Firm reviews all copy. Page text was rewritten from the old site's facts; the **privacy policy and terms are drafts** and need legal review.
+- [ ] Confirm the review quotes are approved for use.
+- [ ] Add headshots for the 9 team members currently shown as initials (`lib/people.ts`, images in `public/images/team/`).
+- [ ] Confirm phone, address, email, hours in `lib/site.ts`.
+- [ ] Point the domain to Vercel (see above). Old WordPress URLs are already redirected (`next.config.ts`).
+- [ ] Submit `https://employmentlawassist.com/sitemap.xml` in Google Search Console.
+
+## Editing content
+
+All text lives in typed data files in `lib/`, not in the page components:
+
+| File | Contents |
+|---|---|
+| `site.ts` | Firm name, phone, email, address, map links, promises |
+| `practice-areas.ts` | The 5 practice-area pages |
+| `regions.ts` | 6 regions x 3 topics = 18 location pages (URLs match the old site) |
+| `faq.ts` | FAQ groups and the homepage FAQ picks |
+| `people.ts` | Team members and client review excerpts |
+| `careers.ts` | Open roles and culture blurbs |
+| `posts.ts` | Blog posts |
+| `chat.ts` | AI assistant instructions and offline answers |
+
+Images are in `public/images/`. Colors and animation are defined in `app/globals.css` (`@theme` block).
+
+## Structure
+
+```
+app/
+  page.tsx                 homepage
+  [slug]/page.tsx          practice areas + 18 location pages (old WordPress URLs)
+  about, our-team, faq, reviews, contact-us, blog/, careers/, privacy-policy, terms-and-conditions
+  api/chat/route.ts        streams AI replies (rate-limited per visitor)
+  api/intake/route.ts      validates the form and forwards to INTAKE_WEBHOOK_URL
+  sitemap.ts, robots.ts
+components/                UI, header/footer, chat widget, motion helpers (Reveal, Parallax, Marquee)
+lib/                       content data (above)
+next.config.ts             redirects from old WordPress URLs
+```
+
+## Notes
+
+- The chat assistant is instructed not to give legal advice, quote case values, or collect sensitive data, and it
+  points visitors to the phone line and case-review form. Review `lib/chat.ts` if the firm wants different rules.
+- All animation respects the visitor's reduced-motion setting.
+- Images (office, attorneys, logo, badges) came from the firm's existing website.
