@@ -31,7 +31,7 @@ CLI alternative: `npm i -g vercel && vercel` (preview) / `vercel --prod` (produc
 
 | Variable | Required | What it does |
 |---|---|---|
-| `INTAKE_WEBHOOK_URL` | **Yes, before launch** | URL that receives each case-review submission as JSON (`name, email, phone, story, source, receivedAt`). Use a Zapier/Make catch-hook, a CRM endpoint, or a Slack incoming webhook. **Without it, leads are not delivered anywhere.** |
+| `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | **Yes, before launch** | Public Web3Forms Free access key used by the browser-side case-review form. Add it to the ignored `.env.local` file or the Vercel environment settings. **Without it, submissions are disabled and the form shows a phone fallback.** |
 | `ANTHROPIC_API_KEY` | For live chat | Key from console.anthropic.com. Without it the chat answers from canned replies in `lib/chat.ts`. Chat usage bills to this key. |
 | `CHAT_MODEL` | No | Overrides the chat model (default `claude-opus-5-5`). A cheaper model such as `claude-sonnet-5-5` lowers cost. |
 | `NEXT_PUBLIC_SITE_URL` | Recommended | Production URL for canonical links and `sitemap.xml`. Defaults to `https://employmentlawassist.com`. |
@@ -40,7 +40,7 @@ Preview deployments automatically send `Disallow: /` in `robots.txt`; production
 
 ## Before going live: checklist
 
-- [ ] Set `INTAKE_WEBHOOK_URL` and submit a test case review end to end.
+- [ ] Set `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` and submit a test case review end to end. Confirm the message arrives in the Web3Forms destination inbox.
 - [ ] Set `ANTHROPIC_API_KEY` (the firm's own key) and test the chat. Consider a spend limit in the Anthropic console.
 - [ ] Firm reviews all copy. Page text was rewritten from the old site's facts; the **privacy policy and terms are drafts** and need legal review.
 - [ ] Confirm the review quotes are approved for use.
@@ -74,7 +74,6 @@ app/
   [slug]/page.tsx          practice areas + 18 location pages (old WordPress URLs)
   about, our-team, faq, reviews, contact-us, blog/, careers/, privacy-policy, terms-and-conditions
   api/chat/route.ts        streams AI replies (rate-limited per visitor)
-  api/intake/route.ts      validates the form and forwards to INTAKE_WEBHOOK_URL
   sitemap.ts, robots.ts
 components/                UI, header/footer, chat widget, motion helpers (Reveal, Parallax, Marquee)
 lib/                       content data (above)
@@ -87,3 +86,4 @@ next.config.ts             redirects from old WordPress URLs
   points visitors to the phone line and case-review form. Review `lib/chat.ts` if the firm wants different rules.
 - All animation respects the visitor's reduced-motion setting.
 - Images (office, attorneys, logo, badges) came from the firm's existing website.
+- The case-review form submits directly from the browser to Web3Forms Free. Its public access key belongs in ignored local environment configuration or the deployment provider's environment settings; never commit a real key.
