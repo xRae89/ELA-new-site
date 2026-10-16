@@ -86,4 +86,4 @@ next.config.ts             redirects from old WordPress URLs
   points visitors to the phone line and case-review form. Review `lib/chat.ts` if the firm wants different rules.
 - All animation respects the visitor's reduced-motion setting.
 - Images (office, attorneys, logo, badges) came from the firm's existing website.
-- The case-review form submits directly from the browser to Web3Forms Free. Its public access key belongs in ignored local environment configuration or the deployment provider's environment settings; never commit a real key.
+- The case-review form uses a native browser POST to Web3Forms Free and redirects to `/thank-you` after submission. Its public access key belongs in ignored local environment configuration or the deployment provider's environment settings; never commit a real key. Provider errors use Web3Forms' native redirect rather than in-page JSON handling.

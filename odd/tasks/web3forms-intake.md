@@ -2,11 +2,11 @@
 
 ## Objective
 
-Connect the existing case-review intake flow to Web3Forms Free through the browser-side API without committing the access key or changing production.
+Connect the existing case-review intake flow to Web3Forms Free through its authorized native HTML form flow without committing the access key or changing production.
 
 ## Problem
 
-The server endpoint currently forwards intake submissions only to a generic `INTAKE_WEBHOOK_URL`. Web3Forms requires its submit endpoint and an `access_key` field.
+The previous client flow used `fetch()` and handled Web3Forms JSON responses in React. The approved Free integration uses a regular browser POST to Web3Forms' submit endpoint with an `access_key` field and a provider redirect.
 
 ## Authorized scope
 
@@ -17,15 +17,16 @@ The server endpoint currently forwards intake submissions only to a generic `INT
 
 ## Tasks
 
-- [x] ODD-1 Update the client intake flow to submit the validated payload to Web3Forms Free through the browser-side API.
+- [x] ODD-1 Update the client intake flow to submit the validated payload to Web3Forms Free through a native HTML browser POST.
 - [x] ODD-2 Add safe environment configuration guidance without adding the access key to tracked files.
 - [x] ODD-3 Remove the unused server-side intake relay so the production path is unambiguous.
 - [x] ODD-4 Run lint/type/build checks and verify the working tree contains no secret material.
 
 ## Acceptance criteria
 
-- Valid submissions reach Web3Forms using `https://api.web3forms.com/submit` and the browser-side public access key configured through an ignored environment file.
-- Existing validation, consent, honeypot, error handling, and success redirect remain intact.
+- Valid submissions reach Web3Forms using a native form POST to `https://api.web3forms.com/submit` and the browser-side public access key configured through an ignored environment file.
+- Existing consent, honeypot, styling, and `/thank-you` success destination remain intact; browser constraints replace the former React validation.
+- Provider errors are handled by Web3Forms/native redirect rather than in-page JSON errors.
 - The access key is absent from tracked files, diffs, logs, and final output.
 - No push or deployment occurs without explicit approval.
 
@@ -33,7 +34,7 @@ The server endpoint currently forwards intake submissions only to a generic `INT
 
 - Branch created from clean `main` at `90b1d87`.
 - User approved the Web3Forms Free browser-side path.
-- Implementation completed locally; validation evidence recorded below.
+- Native HTML implementation completed locally; validation evidence recorded below.
 
 ## Verification evidence
 
