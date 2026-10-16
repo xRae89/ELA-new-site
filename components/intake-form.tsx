@@ -1,19 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { Lock } from "lucide-react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function IntakeForm({ className, title = "Tell us what happened" }: { className?: string; title?: string }) {
   const id = useId();
+  const [captchaError, setCaptchaError] = useState(false);
 
   return (
     <form
       id="case-review"
       action="https://api.web3forms.com/submit"
       method="POST"
+      onSubmit={(event) => {
+        const token = new FormData(event.currentTarget).get("h-captcha-response");
+
+        if (typeof token !== "string" || token.trim() === "") {
+          event.preventDefault();
+          setCaptchaError(true);
+          return;
+        }
+
+        setCaptchaError(false);
+      }}
       className={cn("rounded-[1.75rem] bg-white p-6 text-ink shadow-[0_30px_80px_-30px_rgba(14,42,35,0.45)] sm:p-8", className)}
     >
       <input type="hidden" name="access_key" value={process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY} />
@@ -73,6 +85,15 @@ export function IntakeForm({ className, title = "Tell us what happened" }: { cla
         <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
           <label htmlFor={`${id}-botcheck`}>Company</label>
           <input id={`${id}-botcheck`} type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" />
+        </div>
+
+        <div>
+          <div className="h-captcha" data-captcha="true" aria-describedby={`${id}-captcha-error`} />
+          {captchaError && (
+            <p id={`${id}-captcha-error`} role="alert" className="mt-2 text-sm text-slate">
+              Please complete the CAPTCHA before submitting this form.
+            </p>
+          )}
         </div>
 
         <label className="flex items-start gap-3 text-[0.8125rem] leading-snug text-slate">

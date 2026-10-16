@@ -41,6 +41,7 @@ Preview deployments automatically send `Disallow: /` in `robots.txt`; production
 ## Before going live: checklist
 
 - [ ] Set `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` and submit a test case review end to end. Confirm the message arrives in the Web3Forms destination inbox.
+- [ ] In the Web3Forms dashboard, enable hCaptcha for this form. Web3Forms Free provides a zero-config hCaptcha flow; no custom hCaptcha key is needed.
 - [ ] Set `ANTHROPIC_API_KEY` (the firm's own key) and test the chat. Consider a spend limit in the Anthropic console.
 - [ ] Firm reviews all copy. Page text was rewritten from the old site's facts; the **privacy policy and terms are drafts** and need legal review.
 - [ ] Confirm the review quotes are approved for use.
@@ -87,3 +88,4 @@ next.config.ts             redirects from old WordPress URLs
 - All animation respects the visitor's reduced-motion setting.
 - Images (office, attorneys, logo, badges) came from the firm's existing website.
 - The case-review form uses a native browser POST to Web3Forms Free and redirects to `/thank-you` after submission. Its public access key belongs in ignored local environment configuration or the deployment provider's environment settings; never commit a real key. Provider errors use Web3Forms' native redirect rather than in-page JSON handling.
+- The case-review form includes Web3Forms' zero-config hCaptcha. Enable hCaptcha in the Web3Forms dashboard; do not add a custom hCaptcha key.

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Source_Serif_4 } from "next/font/google";
+import Script from "next/script";
 import { ChatWidget } from "@/components/chat/chat-widget";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -86,6 +87,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <SiteFooter />
         <ChatWidget />
+        <Script src="https://web3forms.com/client/script.js" strategy="afterInteractive" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </body>
     </html>
