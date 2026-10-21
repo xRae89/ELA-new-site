@@ -87,6 +87,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <SiteFooter />
         <ChatWidget />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-DJR8FRQKLH"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DJR8FRQKLH');`}
+        </Script>
         <Script src="https://web3forms.com/client/script.js" strategy="afterInteractive" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </body>
