@@ -7,7 +7,7 @@ Move the supplied team portraits into the public team-image directory, optimize 
 ## Authorized scope
 
 - Local feature branch: `feat/web3forms-intake`
-- Source photos: `public/images/team/Team photos/`
+- Source photos: supplied PNG files in `public/images/team/`
 - Destination: `public/images/team/`
 - Preserve the existing public URL convention: lowercase kebab-case `.webp` filenames.
 - Do not push or deploy without explicit user approval.
@@ -19,6 +19,7 @@ Move the supplied team portraits into the public team-image directory, optimize 
 - [x] ODD-PHOTO-2 Update team data for newly supplied members without changing roles or names.
 - [x] ODD-PHOTO-3 Remove the redundant source folder only after destination files and mappings are verified.
 - [x] ODD-PHOTO-4 Run image and application checks, inspect file sizes, and record verification evidence.
+- [x] ODD-PHOTO-5 Convert the four newly supplied PNG portraits to optimized WebP files and connect them to the matching team members.
 
 ## Acceptance criteria
 
@@ -37,3 +38,20 @@ Move the supplied team portraits into the public team-image directory, optimize 
 - Source comparison: each optimized destination is materially smaller than its approximately 2.0–2.2 MB PNG source.
 - Application checks: `npx tsc --noEmit`, `npx eslint .`, `npm run build`, and `git diff --check` completed successfully.
 - Limitation: image visual content was not printed or exposed; validation was limited to file type, dimensions, file size, and application checks.
+
+## ODD-PHOTO-5 completion evidence
+
+- Conversion: `cwebp` 1.6.0, lossy quality 82, metadata stripped.
+- Dimensions: Arianna Malo was resized from 1086x1448 to 600x800; Maria Romo, Priscila Olivas, and Rober Hernandez were resized from 1122x1402 to 640x800, preserving aspect ratios.
+- Destination validation: all four files passed `file` as Web/P images and `webpinfo` reported valid lossy VP8 data with no errors.
+- Destination sizes (`stat`, exact bytes): Arianna 29,262; Maria 37,556; Priscila 46,364; Rober 28,246.
+- Source comparison (`stat`, exact bytes): Arianna 2,283,913; Maria 2,360,800; Priscila 2,482,103; Rober 2,144,535. Every destination is smaller than its source.
+- Mapping validation: `lib/people.ts` now maps each matching member to the corresponding lowercase kebab-case WebP URL without changing names, roles, or groups.
+- Source cleanup: the four supplied PNG files were removed after destination validation; no unrelated files were deleted.
+- Application checks: `npx tsc --noEmit`, `npx eslint .`, `npm run build`, and `git diff --check` completed successfully.
+
+## Current continuation
+
+- Authorized by the user to process the four new PNG portraits currently in `public/images/team/`.
+- No push, deploy, or remote mutation is authorized.
+- Route: delegated direct writer; implementation spans image assets and team data, so the writer must inspect the existing mapping before editing.

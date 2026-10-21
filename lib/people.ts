@@ -17,12 +17,12 @@ export const team: TeamMember[] = [
   { name: "Julio Caimares", role: "Intake Manager", photo: "/images/team/julio-caimares.webp", group: "Case team" },
   { name: "Leslie Espeleta", role: "Administrator", photo: "/images/team/leslie-espeleta.webp", group: "Case team" },
   { name: "Kerri Lynch", role: "Paralegal", group: "Case team" },
-  { name: "Maria Romo", role: "Paralegal", group: "Case team" },
+  { name: "Maria Romo", role: "Paralegal", photo: "/images/team/maria-romo.webp", group: "Case team" },
   { name: "Paulina Pola", role: "Paralegal", group: "Case team" },
-  { name: "Rober Hernandez", role: "Paralegal", group: "Case team" },
+  { name: "Rober Hernandez", role: "Paralegal", photo: "/images/team/rober-hernandez.webp", group: "Case team" },
   { name: "Aaron Miller", role: "Case Manager", photo: "/images/team/aaron-miller.webp", group: "Case team" },
-  { name: "Arianna Malo", role: "Case Manager", group: "Case team" },
-  { name: "Priscila Olivas", role: "Case Manager", group: "Case team" },
+  { name: "Arianna Malo", role: "Case Manager", photo: "/images/team/arianna-malo.webp", group: "Case team" },
+  { name: "Priscila Olivas", role: "Case Manager", photo: "/images/team/priscila-olivas.webp", group: "Case team" },
 ];
 
 export type Review = { quote: string; name: string };
