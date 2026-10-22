@@ -16,7 +16,7 @@ export const team: TeamMember[] = [
   { name: "Dominick Osborne", role: "Senior Paralegal", photo: "/images/team/dominick-osborne.webp", group: "Case team" },
   { name: "Julio Caimares", role: "Intake Manager", photo: "/images/team/julio-caimares.webp", group: "Case team" },
   { name: "Leslie Espeleta", role: "Administrator", photo: "/images/team/leslie-espeleta.webp", group: "Case team" },
-  { name: "Kerri Lynch", role: "Paralegal", group: "Case team" },
+  { name: "Kerri Lynch", role: "Paralegal", photo: "/images/team/kerri-lynch.webp", group: "Case team" },
   { name: "Maria Romo", role: "Paralegal", photo: "/images/team/maria-romo.webp", group: "Case team" },
   { name: "Paulina Pola", role: "Paralegal", group: "Case team" },
   { name: "Rober Hernandez", role: "Paralegal", photo: "/images/team/rober-hernandez.webp", group: "Case team" },
